@@ -2,7 +2,11 @@
 
 require 'capybara/rspec'
 require 'selenium-webdriver'
+require 'site_prism'
 require 'yaml'
+
+require_relative '../page_objects/register_page'
+require_relative '../page_objects/login_page'
 
 RSpec.configure do |_config|
   def options

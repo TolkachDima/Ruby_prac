@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 feature 'Sign in user', js: true do
-  credentials = YAML.safe_load(File.read('./creds.yml'))
+  credentials = YAML.safe_load(File.read('./creds.yml'), [Symbol])
 
   login = credentials.fetch(:user_name)
   password = credentials.fetch(:password)
@@ -12,16 +12,18 @@ feature 'Sign in user', js: true do
     visit('http://testautomate.me/redmine/')
     expect(page).to have_content 'Redmine@testautomate.me'
 
-    find('.register').click
+    @sign_up_page = RegisterPage.new
 
-    find('#user_login').set login
-    find('#user_password').set password
-    find('#user_password_confirmation').set password
-    find('#user_firstname').set login
-    find('#user_lastname').set last_name
-    find('#user_mail').set email
+    @sign_up_page.register_link.click
 
-    find_button('Submit').click
+    @sign_up_page.login.set login
+    @sign_up_page.password.set password
+    @sign_up_page.password_confirm.set password
+    @sign_up_page.firstname.set login
+    @sign_up_page.lastname.set last_name
+    @sign_up_page.email.set email
+
+    @sign_up_page.submit_btn.click
 
     expect(page).to have_content('Email has already been taken')
     expect(page).to have_content('Login has already been taken')
@@ -31,16 +33,18 @@ feature 'Sign in user', js: true do
     visit('http://testautomate.me/redmine/')
     expect(page).to have_content 'Redmine@testautomate.me'
 
-    find('.register').click
+    @sign_up_page = RegisterPage.new
 
-    find('#user_login').set login
-    find('#user_password').set password
-    find('#user_password_confirmation').set password
-    find('#user_firstname').set login
-    find('#user_lastname').set last_name
-    find('#user_mail').set email
+    @sign_up_page.register_link.click
 
-    find_button('Submit').click
+    @sign_up_page.login.set login
+    @sign_up_page.password.set password
+    @sign_up_page.password_confirm.set password
+    @sign_up_page.firstname.set login
+    @sign_up_page.lastname.set last_name
+    @sign_up_page.email.set email
+
+    @sign_up_page.submit_btn.click
 
     expect(page).to have_content('Your account has been activated. You can now log in.')
   end
@@ -49,12 +53,21 @@ feature 'Sign in user', js: true do
     visit('http://testautomate.me/redmine/')
     expect(page).to have_content 'Redmine@testautomate.me'
 
-    find('.login').click
+    @sign_in_page = LoginPage.new
 
-    find('#username', wait: 100).set login
-    find('#password').set password
+    @sign_in_page.login_link.click
 
-    find_button('Login').click
+    @sign_in_page.login.set login
+    @sign_in_page.password.set password
+
+    @sign_in_page.submit_btn.click
+
+    # find('.login').click
+    #
+    # find('#username', wait: 100).set login
+    # find('#password').set password
+    #
+    # find_button('Login').click
 
     expect(page).to have_content('Home')
   end
